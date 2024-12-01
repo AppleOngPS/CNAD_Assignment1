@@ -3,22 +3,23 @@
 
 # Design consideration of your microservices
 
-Service Decomposition:
-Login : retrive user id and password to login
-Signup : Create user account
-Profile: Manage user profile , view past booking and manage existing booking
-Car Listing: View all listing of car
-Reservation: Create reservation
-Checkout: caculate amount and create receipt
+**Service Decomposition:**<br /> 
 
-Inter-Service communication
-User HTTP/REST for synchronous call (eg from car listing to reservation)
+Login : retrive user id and password to login<br /> 
+Signup : Create user account<br /> 
+Profile: Manage user profile , view past booking and manage existing booking<br /> 
+Car Listing: View all listing of car<br /> 
+Reservation: Create reservation<br /> 
+Checkout: caculate amount and create receipt<br /> 
 
-API Gateway
-Acts as the entry point for all client requests and helps route requests to the appropriate microservice.
+**Inter-Service communication**<br /> 
+User HTTP/REST for synchronous call (eg from car listing to reservation)<br /> 
 
-Security
-Secure all sensetive data such as user password using JWT Token
+**API Gateway**<br /> 
+Acts as the entry point for all client requests and helps route requests to the appropriate microservice.<br /> 
+
+**Security**<br /> 
+Secure all sensetive data such as user password using JWT Token<br /> 
 
 
 # Architecture diagram
