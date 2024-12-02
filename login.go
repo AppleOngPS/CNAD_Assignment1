@@ -47,8 +47,14 @@ func login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Redirect to the welcome page after successful login
-		http.Redirect(w, r, "/welcome", http.StatusSeeOther)
-		return
+		// Set a session cookie for the user
+		http.SetCookie(w, &http.Cookie{
+			Name:  "userID",
+			Value: user.UserID,
+			Path:  "/",
+		})
+
+		// Redirect to the profile page after successful login
+		http.Redirect(w, r, "/profile", http.StatusSeeOther)
 	}
 }

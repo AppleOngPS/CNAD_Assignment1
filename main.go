@@ -203,6 +203,8 @@ func main() {
 	http.HandleFunc("/login", loginPage)
 	http.HandleFunc("/login/submit", login)
 	http.HandleFunc("/welcome", welcomePage)
+	http.HandleFunc("/profile", profilePage)
+	http.HandleFunc("/logout", logout)
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", nil))
