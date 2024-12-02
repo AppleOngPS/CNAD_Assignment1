@@ -34,7 +34,7 @@ CREATE TABLE users (
     userID INT AUTO_INCREMENT PRIMARY KEY,  -- userID now auto-increments
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(8) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     membershipID VARCHAR(10) NOT NULL,  
     FOREIGN KEY (membershipID) REFERENCES membership(membershipID)
 );
