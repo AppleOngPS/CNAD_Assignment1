@@ -10,7 +10,7 @@ Signup : Create user account<br />
 Profile: Manage user profile , view past booking and manage existing booking<br /> 
 Car Listing: View all listing of car<br /> 
 Reservation: Create reservation<br /> 
-Checkout: caculate amount and create receipt<br /> 
+Checkout: calculate amount and create receipt<br /> 
 
 **Inter-Service communication**<br /> 
 User HTTP/REST for synchronous call (eg from car listing to reservation)<br /> 
