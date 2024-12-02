@@ -171,6 +171,19 @@ type User struct {
 	MembershipID string
 }
 
+type Car struct {
+	VehicleID    string
+	VehicleBrand string
+	StartDate    string
+	EndDate      string
+	StartTime    string
+	EndTime      string
+	Amount       float64
+	Location     string
+	ChargeLevel  string
+	Cleanliness  string
+}
+
 // Initialize the database connection
 func initDB() {
 	dsn := "user:password@tcp(127.0.0.1:3306)/CarSharing" // Replace with your MySQL credentials
@@ -201,6 +214,11 @@ func main() {
 	http.HandleFunc("/profile", profilePage)
 	http.HandleFunc("/profile/update", updateProfile)
 	http.HandleFunc("/profile/delete", deleteProfile)
+
+	// Car listing page
+	http.HandleFunc("/car-listing", func(w http.ResponseWriter, r *http.Request) {
+		CarListingHandler(w, r, db) // Call to carListing.go handler function
+	})
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", nil))
