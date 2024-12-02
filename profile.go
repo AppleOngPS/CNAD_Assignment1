@@ -203,6 +203,18 @@ func profilePage(w http.ResponseWriter, r *http.Request) {
 				%s
 			</table>
 
+			<h3>Current Bookings:</h3>
+			<table border="1">
+				<tr>
+					<th>Vehicle Brand</th>
+					<th>Rental Period</th>
+					<th>Start Time</th>
+					<th>End Time</th>
+					<th>Amount</th>
+				</tr>
+				%s
+			</table>
+
 			<h3>Delete your account:</h3>
 			<form action="/profile/delete" method="POST">
 				<input type="hidden" name="userID" value="%s">
