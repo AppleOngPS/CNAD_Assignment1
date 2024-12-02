@@ -47,14 +47,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Set a session cookie for the user
-		http.SetCookie(w, &http.Cookie{
-			Name:  "userID",
-			Value: user.UserID,
-			Path:  "/",
-		})
-
 		// Redirect to the profile page after successful login
-		http.Redirect(w, r, "/profile", http.StatusSeeOther)
+		http.Redirect(w, r, "/profile?userID="+user.UserID, http.StatusSeeOther)
+		return
 	}
 }

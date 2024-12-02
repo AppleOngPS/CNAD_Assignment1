@@ -153,7 +153,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -187,11 +186,6 @@ func initDB() {
 	}
 }
 
-// Serve the welcome page after successful login
-func welcomePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to CarSharing! You are logged in.")
-}
-
 func main() {
 	// Initialize the database
 	initDB()
@@ -202,9 +196,11 @@ func main() {
 	http.HandleFunc("/signup/submit", signup)
 	http.HandleFunc("/login", loginPage)
 	http.HandleFunc("/login/submit", login)
-	http.HandleFunc("/welcome", welcomePage)
+
+	// Profile page for viewing and updating the profile
 	http.HandleFunc("/profile", profilePage)
-	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/profile/update", updateProfile)
+	http.HandleFunc("/profile/delete", deleteProfile)
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", nil))
