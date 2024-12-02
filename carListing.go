@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// Handle the car listing page
 func CarListingHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	// Query to get all car listings from the vehicle table
 	rows, err := db.Query(`
@@ -53,16 +54,17 @@ func CarListingHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// HTML layout
 	htmlContent := `
-	<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Car Listing</title>
-	</head>
-	<body>
-		<h1>Available Cars for Rent</h1>
-		<div>`
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Car Listing</title>
+		</head>
+		<body>
+			<h1>Available Cars for Rent</h1>
+			<div>
+	`
 
 	// Loop through each car and append the HTML for each
 	for _, car := range cars {
@@ -73,16 +75,17 @@ func CarListingHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				<p><strong>Available From:</strong> %s To %s</p>
 				<p><strong>Available Time:</strong> %s - %s</p>
 				<p><strong>Price per Hour:</strong> $%.2f</p>
-				<a href="/reserve?vehicleID=%s">Reserve This Car</a>
-			</div>`,
-			car.VehicleBrand, car.VehicleID, car.StartDate, car.EndDate,
-			car.StartTime, car.EndTime, car.Amount, car.VehicleID)
+				<!-- General Reserve Button -->
+				<form action="/reservation" method="GET">
+					<input type="submit" value="Reserve">
+				</form>
+			</div>`, car.VehicleBrand, car.VehicleID, car.StartDate, car.EndDate, car.StartTime, car.EndTime, car.Amount)
 	}
 
 	htmlContent += `
-		</div>
-	</body>
-	</html>`
+			</div>
+		</body>
+		</html>`
 
 	// Write the final HTML content to the response
 	w.Write([]byte(htmlContent))

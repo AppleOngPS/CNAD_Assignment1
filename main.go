@@ -223,8 +223,8 @@ func main() {
 
 	// Car Reservation page
 	http.HandleFunc("/reservation", Reservation)
-	http.HandleFunc("/reservation/submit", reservationHandler)
-	http.HandleFunc("/reservation/success", reservationSuccess)
+	//http.HandleFunc("/reservation/submit", reservationHandler)
+	//http.HandleFunc("/reservation/success", reservationSuccess)
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", nil))
