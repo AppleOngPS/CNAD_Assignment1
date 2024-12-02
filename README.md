@@ -46,7 +46,7 @@ Secure all sensetive data such as user password using JWT Token<br />
 **Database**
 All microservices link to a single database to avoid data duplication and ensure data consistency. However, denormalization may be used in some cases to improve query performance, depending on the service's needs.
 
-# note
+note to remove this secction 
 email  - content+ hyperlink(print the link) = verification (/do the route) - for signup and bill payment
 invoice - just display on the website
 membership- just to show the description and benefit
