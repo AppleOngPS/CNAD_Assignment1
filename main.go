@@ -222,9 +222,9 @@ func main() {
 	})
 
 	// Car Reservation page
-	http.HandleFunc("/reservation", func(w http.ResponseWriter, r *http.Request) {
-		CarReservationHandler(w, r, db)
-	}) // Call to carReservation.go handler function
+	http.HandleFunc("/reservation", Reservation)
+	http.HandleFunc("/reservation/submit", reservationHandler)
+	http.HandleFunc("/reservation/success", reservationSuccess)
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", nil))
