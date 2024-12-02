@@ -205,12 +205,13 @@ func main() {
 	defer db.Close()
 
 	// Set up routes
+	// Signup and login pages
 	http.HandleFunc("/signup", signupPage)
 	http.HandleFunc("/signup/submit", signup)
 	http.HandleFunc("/login", loginPage)
 	http.HandleFunc("/login/submit", login)
 
-	// Profile page for viewing and updating the profile
+	// Profile page
 	http.HandleFunc("/profile", profilePage)
 	http.HandleFunc("/profile/update", updateProfile)
 	http.HandleFunc("/profile/delete", deleteProfile)
@@ -219,6 +220,11 @@ func main() {
 	http.HandleFunc("/car-listing", func(w http.ResponseWriter, r *http.Request) {
 		CarListingHandler(w, r, db) // Call to carListing.go handler function
 	})
+
+	// Car Reservation page
+	http.HandleFunc("/reservation", func(w http.ResponseWriter, r *http.Request) {
+		CarReservationHandler(w, r, db)
+	}) // Call to carReservation.go handler function
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", nil))
