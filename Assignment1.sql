@@ -10,17 +10,25 @@ CREATE TABLE membership (
     descriptions VARCHAR(255) NOT NULL
 );
 
+
 -- Create vehicle table
 CREATE TABLE vehicle (
     vehicleID VARCHAR(5) PRIMARY KEY NOT NULL,
     vehicleBrand VARCHAR(255),
-    startDate DATE NOT NULL,
-    endDate DATE NOT NULL,
-    startTime TIME NOT NULL,
-    endTime TIME NOT NULL,
-    amount DECIMAL(4, 2) NOT NULL
+   amount DECIMAL(4, 2) NOT NULL
 );
 
+-- Create vehicle scheldule
+Create table vehicle_schedule (
+vehicleID VARCHAR(5) NOT NULL, 
+AvailableSlotstartDate DATE NOT NULL,
+AvailableSlotendDate DATE NOT NULL,
+AvailableSlotstartTime TIME NOT NULL,
+AvailableSlotendTime TIME NOT NULL,
+isAvailable BOOLEAN NOT NULL DEFAULT true,
+FOREIGN KEY (vehicleID) REFERENCES vehicle(vehicleID)
+);
+-- drop table vehicle_schedule
 -- Create promotion table
 CREATE TABLE promotion (
     promotionID VARCHAR(5) PRIMARY KEY NOT NULL,
@@ -54,15 +62,7 @@ CREATE TABLE trackRentalHistory (
     FOREIGN KEY (vehicleID) REFERENCES vehicle(vehicleID)
 );
 
--- Create vehicle scheldule
-Create table vehicle_scheldule(
-vehicleID VARCHAR(5) NOT NULL, 
-AvailableSlotstartDate DATE NOT NULL,
-AvailableSlotendDate DATE NOT NULL,
-AvailableSlotstartTime TIME NOT NULL,
-AvailableSlotendTime TIME NOT NULL,
-FOREIGN KEY (vehicleID) REFERENCES vehicle(vehicleID)
-);
+
 
 -- Create vehicleStatus table
 CREATE TABLE vehicleStatus (
@@ -73,9 +73,10 @@ CREATE TABLE vehicleStatus (
     FOREIGN KEY (vehicleID) REFERENCES vehicle(vehicleID)
 );
 
+
 -- Create reservation table
 CREATE TABLE reservation (
-    reservationID VARCHAR(5) PRIMARY KEY NOT NULL,
+    reservationID INT AUTO_INCREMENT PRIMARY KEY,
     userID INT NOT NULL,  -- Changed to INT to match userID type
     vehicleID VARCHAR(5) NOT NULL, 
     startDate DATE NOT NULL,
@@ -113,31 +114,32 @@ INSERT INTO users (username, email, password, membershipID) VALUES
 ('Wong', 'wongSY@gmail.com', '1234v26', 'M2');
 
 -- Insert data into vehicle table
-INSERT INTO vehicle (vehicleID, vehicleBrand, startDate, endDate, startTime, endTime, amount) VALUES
-('V1', 'Honda', '2024-01-01', '2024-12-31', '09:00:00', '18:00:00', 20.00),
-('V2', 'Tesla', '2024-01-01', '2024-12-31', '09:00:00', '18:00:00', 15.00),
-('V3', 'Nissan ', '2024-01-01', '2024-12-31', '09:00:00', '18:00:00', 18.00);
+INSERT INTO vehicle (vehicleID, vehicleBrand, amount) VALUES
+('V1', 'Honda', 20.00),
+('V2', 'Tesla', 15.00),
+('V3', 'Nissan ', 18.00);
+select*from vehicle;
 
 -- Insert data into promotion table
 INSERT INTO promotion (promotionID, promotionCode, discount, description) VALUES
 ('P001', 'NEWUSER', 20.00, '20% discount for new users'),
 ('P002', 'HOILDAY', 10.00, '10% discount for holidays');
 
-INSERT INTO vehicle_schedule (vehicleID, AvailableSlotstartDate, AvailableSlotendDate, AvailableSlotstartTime, AvailableSlotendTime)
+INSERT INTO vehicle_schedule (vehicleID, availableSlotStartDate, availableSlotEndDate, availableSlotStartTime, availableSlotEndTime, isAvailable)
 VALUES
-('V001', '2024-12-10', '2024-12-10', '09:10:00', '17:30:00'),
-('V002', '2024-12-10', '2024-12-10', '09:00:00', '17:00:00'),
-('V003', '2024-12-10', '2024-12-10', '09:00:00', '17:00:00'),
-('V004', '2024-12-11', '2024-12-11', '08:00:00', '14:00:00'),
-('V005', '2024-12-11', '2024-12-11', '10:10:00', '18:45:00'),
-('V001', '2024-12-12', '2024-12-15', '09:00:00', '16:00:00'),
-('V002', '2024-12-12', '2024-12-15', '09:00:00', '16:00:00'),
-('V003', '2024-12-16', '2024-12-16', '07:00:00', '11:00:00'),
-('V003', '2024-12-16', '2024-12-16', '13:00:00', '17:00:00'),
-('V001', '2024-12-17', '2024-12-17', '09:00:00', '16:00:00'),
-('V002', '2024-12-17', '2024-12-17', '09:00:00', '16:00:00'),
-('V003', '2024-12-17', '2024-12-17', '07:00:00', '11:00:00'),
-('V004', '2024-12-17', '2024-12-18', '09:50:00', '15:50:00');
+('V1', '2024-12-10', '2024-12-10', '09:10:00', '17:30:00', 1),
+('V2', '2024-12-10', '2024-12-10', '09:00:00', '17:00:00', 1),
+('V3', '2024-12-10', '2024-12-10', '09:00:00', '17:00:00', 1),
+('V3', '2024-12-11', '2024-12-11', '08:00:00', '14:00:00', 1),
+('V2', '2024-12-11', '2024-12-11', '10:10:00', '18:45:00', 1),
+('V1', '2024-12-12', '2024-12-15', '09:00:00', '16:00:00', 1),
+('V2', '2024-12-12', '2024-12-15', '09:00:00', '16:00:00', 1),
+('V3', '2024-12-16', '2024-12-16', '07:00:00', '11:00:00', 1),
+('V3', '2024-12-16', '2024-12-16', '13:00:00', '17:00:00', 1),
+('V1', '2024-12-17', '2024-12-17', '09:00:00', '16:00:00', 1),
+('V2', '2024-12-17', '2024-12-17', '09:00:00', '16:00:00', 1),
+('V3', '2024-12-17', '2024-12-17', '07:00:00', '11:00:00', 1),
+('V3', '2024-12-17', '2024-12-18', '09:50:00', '15:50:00', 1);
 
 
 -- Insert data into vehicleStatus table
