@@ -171,18 +171,18 @@ type User struct {
 	MembershipID string
 }
 
-type Car struct {
-	VehicleID    string
-	VehicleBrand string
-	StartDate    string
-	EndDate      string
-	StartTime    string
-	EndTime      string
-	Amount       float64
-	Location     string
-	ChargeLevel  string
-	Cleanliness  string
-}
+// type Car struct {
+// 	VehicleID    string
+// 	VehicleBrand string
+// 	StartDate    string
+// 	EndDate      string
+// 	StartTime    string
+// 	EndTime      string
+// 	Amount       float64
+// 	Location     string
+// 	ChargeLevel  string
+// 	Cleanliness  string
+// }
 
 // Initialize the database connection
 func initDB() {
@@ -217,12 +217,12 @@ func main() {
 	http.HandleFunc("/profile/delete", deleteProfile)
 
 	// Car listing page
-	http.HandleFunc("/car-listing", func(w http.ResponseWriter, r *http.Request) {
-		CarListingHandler(w, r, db) // Call to carListing.go handler function
-	})
+	//http.HandleFunc("/car-listing", func(w http.ResponseWriter, r *http.Request) {
+	//CarListingHandler(w, r, db) // Call to carListing.go handler function
+	//})
 
 	// Car Reservation page
-	http.HandleFunc("/reservation", Reservation)
+	//http.HandleFunc("/reservation", Reservation)
 	//http.HandleFunc("/reservation/submit", reservationHandler)
 	//http.HandleFunc("/reservation/success", reservationSuccess)
 

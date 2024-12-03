@@ -6,7 +6,7 @@ import (
 
 // Handle the signup page
 func signupPage(w http.ResponseWriter, r *http.Request) {
-	// Embed the signup HTML form
+	// HTML for the signup form with a membership dropdown, defaulting to "Basic"
 	tmpl := `
 		<!DOCTYPE html>
 		<html lang="en">
@@ -27,13 +27,15 @@ func signupPage(w http.ResponseWriter, r *http.Request) {
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" required><br><br>
 
-				<input type="hidden" name="membership" value="M1"><br><br>
+				<!-- Default "Basic" membership selection -->
+				<input type="hidden" name="membershipID" value="1"><br><br>
 
 				<input type="submit" value="Sign Up">
 			</form>
 		</body>
 		</html>
 	`
+
 	// Serve the HTML to the user
 	w.Write([]byte(tmpl))
 }
@@ -44,15 +46,27 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
-		membershipID := r.FormValue("membership")
+		membershipID := r.FormValue("membershipID")
 
-		// Insert the new user into the database
-		_, err := db.Exec("INSERT INTO users (username, email, password, membershipID) VALUES (?, ?, ?, ?)",
-			username, email, password, membershipID)
+		// Fetch the membership description for the selected membershipID (Basic is always ID=1)
+		var membershipDescription string
+		err := db.QueryRow("SELECT descriptions FROM membership WHERE membershipID = ?", membershipID).Scan(&membershipDescription)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Failed to retrieve membership description: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		_, err = db.Exec(`
+	INSERT INTO users (username, email, password, typeOfStatus) 
+	VALUES (?, ?, ?, (SELECT typeOfStatus FROM membership WHERE membershipID = ?))`,
+			username, email, password, membershipID,
+		)
+
+		if err != nil {
+			http.Error(w, "Failed to register user: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		// Redirect to the login page after successful signup
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
