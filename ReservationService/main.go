@@ -203,8 +203,8 @@ func main() {
 	// Set up routes
 
 	// Car Reservation page
-	http.HandleFunc("/reservation", ReservationHandler)
-	http.HandleFunc("/getAvailableSlots", GetAvailableSlotsHandler)
+	http.HandleFunc("/reservation", Reservation)
+	//http.HandleFunc("/getAvailableSlots", GetAvailableSlotsHandler)
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8082", nil))
