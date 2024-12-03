@@ -3,8 +3,6 @@
 
 # Design consideration of your microservices
 
-have the top process of why you create each service
-have a reason why all link to sql - mention about denormalisation
 **Service Decomposition:**<br /> 
 
 **User Management**<br /> 
@@ -51,13 +49,9 @@ Secure all sensetive data such as user password using JWT Token<br />
 **Database**
 All microservices link to a single database to avoid data duplication and ensure data consistency. However, denormalization may be used in some cases to improve query performance, depending on the service's needs.
 
-note to remove this secction 
-email  - content+ hyperlink(print the link) = verification (/do the route) - for signup and bill payment
-invoice - just display on the website
-membership- just to show the description and benefit
-
 # Architecture diagram
-![architecture diagram](https://github.com/user-attachments/assets/57d6a3d3-3063-4e9e-9ace-a66fd00122d4)
+
+![architecture diagram](https://github.com/user-attachments/assets/cf4189b9-bc90-41b2-9a2f-860d8ac18e3f)
 
 # Instructions for setting up and running your microservices
 
