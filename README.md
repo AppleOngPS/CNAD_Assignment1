@@ -7,6 +7,7 @@ have the top process of why you create each service
 have a reason why all link to sql - mention about denormalisation
 **Service Decomposition:**<br /> 
 
+**User Management**<br /> 
 **Login**<br /> 
 Purpose: Allow user to login to view using their own credential<br /> 
 Backend: Verify the userID and password against the database, if it exist it will proceed to the car listing page<br /> 
@@ -22,21 +23,25 @@ Purpose: Manage user profile , view past booking and manage existing booking<br 
 Backend:When user modify the details the database will update or delete the record in the database<br /> 
 SQL: check if they enter the details correctly <br /> 
 
+**View Listing Service**
 **Car Listing**<br /> 
 Purpose: View all listing of car<br /> 
 Backend: it will retreve the data from the database and display in the website
 SQL: retreive the data from the database
 
+**Reservation service**
 Reservation: Create reservation<br /> 
 Purpose: Create a new booking<br /> 
 Backend: It will insert a new record when user create a new booking
 SQL: insert a new record
 
+**Checkout Service**
 Checkout: calculate amount and create receipt<br /> 
 purpose: To create a invoice base on what the user had reserved
 Backend: to generate a invoice to allow user to see
 SQL: Insert a new record
 
+**Others**
 **Inter-Service communication**<br /> 
 User HTTP/REST for synchronous call (eg from car listing to reservation)<br /> 
 
