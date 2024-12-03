@@ -155,6 +155,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -163,25 +164,20 @@ import (
 var db *sql.DB
 
 // User struct to hold user data (Exported to be accessible in other files)
-type User struct {
-	UserID       string
-	Username     string
-	Email        string
-	Password     string
-	MembershipID string
-}
-
-type Car struct {
+// Car struct to hold vehicle data
+type vehicle struct {
 	VehicleID    string
 	VehicleBrand string
-	StartDate    string
-	EndDate      string
-	StartTime    string
-	EndTime      string
-	Amount       float64
-	Location     string
-	ChargeLevel  string
-	Cleanliness  string
+}
+
+// Slot struct to hold available slot data
+type vehicle_schedule struct {
+	vehicleID              string
+	AvailableSlotstartDate time.Time
+	AvailableSlotendDate   time.Time
+	AvailableSlotstartTime time.Time
+	AvailableSlotendTime   time.Time
+	isAvailable            bool
 }
 
 // Initialize the database connection
@@ -207,9 +203,8 @@ func main() {
 	// Set up routes
 
 	// Car Reservation page
-	http.HandleFunc("/reservation", Reservation)
-	//http.HandleFunc("/reservation/submit", reservationHandler)
-	//http.HandleFunc("/reservation/success", reservationSuccess)
+	http.HandleFunc("/reservation", ReservationHandler)
+	http.HandleFunc("/getAvailableSlots", GetAvailableSlotsHandler)
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8082", nil))
