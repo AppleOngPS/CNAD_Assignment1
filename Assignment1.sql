@@ -90,7 +90,7 @@ CREATE TABLE reservation (
 -- Create billing table
 CREATE TABLE billing (
     billingId VARCHAR(5) PRIMARY KEY NOT NULL,
-    reservationID VARCHAR(5) NOT NULL, 
+    reservationID INT NOT NULL, 
     amount DECIMAL(4, 2),
     status VARCHAR(10) NOT NULL,
     promotionID VARCHAR(5),  
@@ -158,23 +158,24 @@ INSERT INTO trackRentalHistory (trackRentalHistory, userID, vehicleID, vehicleBr
 
 -- Insert data into reservation table
 INSERT INTO reservation (reservationID, userID, vehicleID, startDate, endDate, startTime, endTime) VALUES
-('R1', 1, 'V1', '2024-01-15', '2024-01-16', '10:00:00', '12:00:00'),
-('R2', 2, 'V2', '2024-01-17', '2024-01-18', '14:00:00', '16:00:00'),
-('R3', 3, 'V3', '2024-01-19', '2024-01-20', '09:00:00', '11:00:00'),
-('R4', 4, 'V3', '2024-02-19', '2024-02-20', '09:00:00', '11:00:00');
+(1, 1, 'V1', '2024-01-15', '2024-01-16', '10:00:00', '12:00:00'),
+(2, 2, 'V2', '2024-01-17', '2024-01-18', '14:00:00', '16:00:00'),
+(3, 3, 'V3', '2024-01-19', '2024-01-20', '09:00:00', '11:00:00'),
+(4, 4, 'V3', '2024-02-19', '2024-02-20', '09:00:00', '11:00:00');
 
 -- Insert data into billing table
 INSERT INTO billing (billingId, reservationID, amount, status, promotionID) VALUES
-('B1', 'R1', 40.00, 'Paid','P001'),
-('B2', 'R2', 30.00, 'Paid','P002'),
-('B3', 'R3', 36.00, 'Pending',NULL),
-('B4', 'R3', 36.00, 'Processing','P002');
+(1, 1, 40.00, 'Paid','P001'),
+(2, 1, 30.00, 'Paid','P002'),
+(3, 3, 36.00, 'Pending',NULL),
+(4, 3, 36.00, 'Processing','P002');
 
 -- Query data to check insertions
 SELECT * FROM billing;
 SELECT * FROM reservation;
 SELECT * FROM membership;
 SELECT * FROM trackRentalHistory;
+select * from vehicle_schedule;
 SELECT * FROM users;
 SELECT * FROM vehicle;
 SELECT * FROM vehicleStatus;
