@@ -6,36 +6,27 @@ import (
 	"net/http"
 )
 
-// VehicleSlot represents a single slot in the schedule
-type VehicleSlot struct {
-	VehicleID              string
-	AvailableSlotStartDate string
-	AvailableSlotEndDate   string
-	AvailableSlotStartTime string
-	AvailableSlotEndTime   string
-}
-
-// showAvailableSlots: Show available vehicle slots
-
-// showModifyBookingHandler: Show the form to modify an existing booking
-func showModifyBookingHandler(w http.ResponseWriter, r *http.Request) {
-	// Get the reservation ID from the query parameters
+func showModifyBooking(w http.ResponseWriter, r *http.Request) {
+	// Get reservation ID
 	reservationID := r.URL.Query().Get("reservationID")
 	if reservationID == "" {
 		http.Error(w, "Missing reservation ID", http.StatusBadRequest)
 		return
 	}
 
-	// Query the reservation details
+	// Fetch current booking details
 	var currentVehicleID, currentStartDate, currentEndDate, currentStartTime, currentEndTime string
-	err := db.QueryRow(`SELECT vehicleID, startDate, endDate, startTime, endTime FROM reservation WHERE reservationID = ?`, reservationID).
+	err := db.QueryRow(`
+		SELECT vehicleID, startDate, endDate, startTime, endTime 
+		FROM reservation 
+		WHERE reservationID = ?`, reservationID).
 		Scan(&currentVehicleID, &currentStartDate, &currentEndDate, &currentStartTime, &currentEndTime)
 	if err != nil {
 		http.Error(w, "Unable to fetch reservation data", http.StatusInternalServerError)
 		return
 	}
 
-	// Query to fetch available slots
+	// Fetch available slots
 	rows, err := db.Query(`
 		SELECT vehicleID, AvailableSlotstartDate, AvailableSlotendDate, AvailableSlotstartTime, AvailableSlotendTime
 		FROM vehicle_schedule
@@ -57,7 +48,7 @@ func showModifyBookingHandler(w http.ResponseWriter, r *http.Request) {
 		slots = append(slots, slot)
 	}
 
-	// Render the form to modify the booking
+	// Render modify booking page
 	tmpl := template.Must(template.New("modify").Parse(`
 		<!DOCTYPE html>
 		<html lang="en">
@@ -94,5 +85,34 @@ func showModifyBookingHandler(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func modifyBooking(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		// Get form values
+		reservationID := r.FormValue("reservationID")
+		vehicleID := r.FormValue("vehicleID")
+
+		// Check for missing values
+		if reservationID == "" || vehicleID == "" {
+			http.Error(w, "Missing required fields", http.StatusBadRequest)
+			return
+		}
+
+		// Update reservation in the database
+		_, err := db.Exec(`
+			UPDATE reservation 
+			SET vehicleID = ? 
+			WHERE reservationID = ?`, vehicleID, reservationID)
+		if err != nil {
+			http.Error(w, "Error updating reservation", http.StatusInternalServerError)
+			return
+		}
+
+		// Redirect to billing or confirmation page
+		//http.Redirect(w, r, "/billing", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 }

@@ -81,10 +81,10 @@ func main() {
 	defer db.Close()
 
 	// Set up routes
-	http.HandleFunc("/", showAvailableSlots)                     // Displays available slots
-	http.HandleFunc("/reserve", reserveSlot)                     // Reserves a slot and redirects
-	http.HandleFunc("/modify-booking", showModifyBookingHandler) // Modify booking form
-	//http.HandleFunc("/update-booking", modifyBookingHandler)     // Update the booking
+	http.HandleFunc("/reserve", reserveSlot)              // Handles slot reservation
+	http.HandleFunc("/modify-booking", showModifyBooking) // Handles modify booking page
+	http.HandleFunc("/update-booking", modifyBooking)     // Updates booking
+	http.HandleFunc("/", showAvailableSlots)              // Default route to show available slots
 
 	// Start the server
 	log.Println("Server is running on port 8082...")
