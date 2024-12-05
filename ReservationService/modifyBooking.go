@@ -123,7 +123,7 @@ func modifyBooking(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Redirect to confirmation page or back to slots
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		//http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
@@ -150,7 +150,7 @@ func deleteBooking(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Redirect to the homepage or another page
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		//http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
