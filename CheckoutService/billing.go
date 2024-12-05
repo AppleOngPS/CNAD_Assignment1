@@ -75,8 +75,42 @@ func getVehiclePricePerHour(vehicleID string) (float64, error) {
 	return pricePerHour, nil
 }
 
+// Function to get available promo codes and their discount
+func getPromoCodes() ([]struct {
+	Code     string
+	Discount float64
+}, error) {
+	rows, err := db.Query(`
+		SELECT promotionCode, discount
+		FROM promotion`)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching promo codes: %v", err)
+	}
+	defer rows.Close()
+
+	var promoCodes []struct {
+		Code     string
+		Discount float64
+	}
+	for rows.Next() {
+		var code string
+		var discount float64
+		if err := rows.Scan(&code, &discount); err != nil {
+			return nil, fmt.Errorf("error scanning promo code: %v", err)
+		}
+		promoCodes = append(promoCodes, struct {
+			Code     string
+			Discount float64
+		}{Code: code, Discount: discount})
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating over promo codes: %v", err)
+	}
+	return promoCodes, nil
+}
+
 // Function to display current booking details
-func displayCurrentbooking(w http.ResponseWriter, r *http.Request) {
+func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
 	// Get reservation ID from the query parameters
 	reservationID := r.URL.Query().Get("reservationID")
 	if reservationID == "" {
@@ -87,8 +121,8 @@ func displayCurrentbooking(w http.ResponseWriter, r *http.Request) {
 	// Fetch current booking details from the reservation table
 	var userID, currentVehicleID, currentStartDate, currentEndDate, currentStartTime, currentEndTime string
 	err := db.QueryRow(`
-		SELECT userID, vehicleID, startDate, endDate, startTime, endTime 
-		FROM reservation 
+		SELECT userID, vehicleID, startDate, endDate, startTime, endTime
+		FROM reservation
 		WHERE reservationID = ?`, reservationID).
 		Scan(&userID, &currentVehicleID, &currentStartDate, &currentEndDate, &currentStartTime, &currentEndTime)
 	if err != nil {
@@ -108,7 +142,7 @@ func displayCurrentbooking(w http.ResponseWriter, r *http.Request) {
 	err = db.QueryRow(`
 		SELECT u.username, u.membershipID, m.typeOfStatus
 		FROM users u
-		INNER JOIN membership m ON u.membershipID = m.membershipID 
+		INNER JOIN membership m ON u.membershipID = m.membershipID
 		WHERE u.userID = ?`, userID).
 		Scan(&userName, &membershipID, &typeOfMembership)
 	if err != nil {
@@ -137,11 +171,11 @@ func displayCurrentbooking(w http.ResponseWriter, r *http.Request) {
 	// Apply the discount to the total price
 	discountedPrice := totalPrice - discount
 
-	// Create a Member struct with the fetched user details
-	member := Member{
-		UserName:         userName,
-		membershipID:     membershipID,
-		typeOfMembership: typeOfMembership,
+	// Fetch available promo codes
+	promoCodes, err := getPromoCodes()
+	if err != nil {
+		http.Error(w, "Unable to fetch promo codes", http.StatusInternalServerError)
+		return
 	}
 
 	// Render the HTML template and pass in the data
@@ -163,15 +197,36 @@ func displayCurrentbooking(w http.ResponseWriter, r *http.Request) {
 			<p><strong>Discount:</strong> ${{.Discount}}</p>
 			<p><strong>Total Price (before discount):</strong> ${{.TotalPrice}}</p>
 			<p><strong>Discounted Price:</strong> ${{.DiscountedPrice}}</p>
+
+			<!-- Promo Code Selection -->
+			<p><strong>Select Promo Code:</strong></p>
+			<select id="promoCodeSelect" onchange="applyPromoCode()">
+				<option value="0">Select Promo Code</option>
+				{{range .PromoCodes}}
+				<option value="{{.Code}}" data-discount="{{.Discount}}">{{.Code}} - ${{.Discount}}</option>
+				{{end}}
+			</select>
+			<p><strong>Final Price after Promo Code:</strong> $<span id="finalPrice">{{.DiscountedPrice}}</span></p>
+
+			<script>
+				function applyPromoCode() {
+					const promoSelect = document.getElementById("promoCodeSelect");
+					const discount = promoSelect.selectedOptions[0].getAttribute("data-discount");
+					const finalPrice = document.getElementById("finalPrice");
+					const discountedPrice = {{.DiscountedPrice}};
+					const newPrice = discountedPrice - parseFloat(discount);
+					finalPrice.innerText = newPrice.toFixed(2);
+				}
+			</script>
 		</body>
 		</html>
 	`))
 
 	// Pass all the necessary data to the template
 	err = tmpl.Execute(w, map[string]interface{}{
-		"UserName":         member.UserName,
-		"MembershipID":     member.membershipID,
-		"TypeOfMembership": member.typeOfMembership,
+		"UserName":         userName,
+		"MembershipID":     membershipID,
+		"TypeOfMembership": typeOfMembership,
 		"CurrentVehicleID": currentVehicleID,
 		"CurrentStartDate": currentStartDate,
 		"CurrentEndDate":   currentEndDate,
@@ -181,6 +236,7 @@ func displayCurrentbooking(w http.ResponseWriter, r *http.Request) {
 		"Discount":         discount,
 		"TotalPrice":       totalPrice,
 		"DiscountedPrice":  discountedPrice,
+		"PromoCodes":       promoCodes,
 	})
 	if err != nil {
 		log.Fatal(err)

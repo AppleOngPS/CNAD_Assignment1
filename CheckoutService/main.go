@@ -33,11 +33,7 @@ func main() {
 	// to run this page put url like like this http://localhost:8083/displayCurrentbooking?reservationID=10 in browser reservationid can be changed
 
 	// Set up routes
-	// http.HandleFunc("/reserve", reserveSlot)              // Handles slot reservation
-	http.HandleFunc("/displayCurrentbooking", displayCurrentbooking) // Handles modify booking page
-	// http.HandleFunc("/update-booking", modifyBooking)     // Updates booking
-	// http.HandleFunc("/delete-booking", deleteBooking)     // delete booking
-	// http.HandleFunc("/", showAvailableSlots)              // Default route to show available slots
+	http.HandleFunc("/displayCurrentbooking", displayCurrentBooking)
 
 	// Start the server
 	log.Println("Server is running on port 8083...")
