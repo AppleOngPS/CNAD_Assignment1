@@ -57,12 +57,14 @@ func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 		<head>
 			<meta charset="UTF-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>Modify Your Booking</title>
+			<title>Modify Current Booking</title>
 		</head>
 		<body>
 			<h1>Modify Your Booking</h1>
 			<p>User ID: {{.UserID}}</p>
 			<p>Current Booking for Vehicle: {{.CurrentVehicleID}} from {{.CurrentStartDate}} to {{.CurrentEndDate}} ({{.CurrentStartTime}} - {{.CurrentEndTime}})</p>
+			
+			<!-- Update Booking drop down list -->
 			<form action="/update-booking" method="POST">
 				<input type="hidden" name="reservationID" value="{{.ReservationID}}">
 				<label for="vehicleID">Select New Vehicle Slot:</label>
@@ -72,6 +74,12 @@ func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 					{{end}}
 				</select><br><br>
 				<input type="submit" value="Update Booking">
+			</form>
+			
+			<!-- Delete Booking Form -->
+			<form action="/delete-booking" method="POST" style="margin-top: 20px;">
+				<input type="hidden" name="reservationID" value="{{.ReservationID}}">
+				<button type="submit" >Delete Booking</button>
 			</form>
 		</body>
 		</html>
@@ -115,6 +123,33 @@ func modifyBooking(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Redirect to confirmation page or back to slots
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	}
+}
+
+func deleteBooking(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		// Get reservation ID from the form
+		reservationID := r.FormValue("reservationID")
+
+		// Check if reservation ID is missing
+		if reservationID == "" {
+			http.Error(w, "Missing reservation ID", http.StatusBadRequest)
+			return
+		}
+
+		// Delete the reservation from the database
+		_, err := db.Exec(`
+			DELETE FROM reservation 
+			WHERE reservationID = ?`, reservationID)
+		if err != nil {
+			http.Error(w, "Error deleting reservation", http.StatusInternalServerError)
+			return
+		}
+
+		// Redirect to the homepage or another page
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
