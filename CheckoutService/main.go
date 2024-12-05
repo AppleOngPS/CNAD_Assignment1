@@ -30,6 +30,7 @@ func main() {
 	// Initialize the database
 	initDB()
 	defer db.Close()
+	// to run this page put url like like this http://localhost:8083/displayCurrentbooking?reservationID=10 in browser reservationid can be changed
 
 	// Set up routes
 	// http.HandleFunc("/reserve", reserveSlot)              // Handles slot reservation
