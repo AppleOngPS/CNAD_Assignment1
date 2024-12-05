@@ -207,6 +207,7 @@ func reserveSlot(w http.ResponseWriter, r *http.Request) {
 			SELECT ?, vehicleID, AvailableSlotstartDate, AvailableSlotendDate, AvailableSlotstartTime, AvailableSlotendTime
 			FROM vehicle_schedule
 			WHERE vehicleID = ? AND isAvailable = 1
+			LIMIT 1;
 		`, userID, vehicleID)
 		if err != nil {
 			http.Error(w, "Error inserting reservation", http.StatusInternalServerError)

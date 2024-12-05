@@ -6,6 +6,8 @@ import (
 	"net/http"
 )
 
+// VehicleSlot represents available slots in the vehicle schedule
+
 func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 	// Get reservation ID
 	reservationID := r.URL.Query().Get("reservationID")
@@ -15,12 +17,12 @@ func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch current booking details
-	var currentVehicleID, currentStartDate, currentEndDate, currentStartTime, currentEndTime string
+	var userID, currentVehicleID, currentStartDate, currentEndDate, currentStartTime, currentEndTime string
 	err := db.QueryRow(`
-		SELECT vehicleID, startDate, endDate, startTime, endTime 
+		SELECT userID, vehicleID, startDate, endDate, startTime, endTime 
 		FROM reservation 
 		WHERE reservationID = ?`, reservationID).
-		Scan(&currentVehicleID, &currentStartDate, &currentEndDate, &currentStartTime, &currentEndTime)
+		Scan(&userID, &currentVehicleID, &currentStartDate, &currentEndDate, &currentStartTime, &currentEndTime)
 	if err != nil {
 		http.Error(w, "Unable to fetch reservation data", http.StatusInternalServerError)
 		return
@@ -59,6 +61,7 @@ func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 		</head>
 		<body>
 			<h1>Modify Your Booking</h1>
+			<p>User ID: {{.UserID}}</p>
 			<p>Current Booking for Vehicle: {{.CurrentVehicleID}} from {{.CurrentStartDate}} to {{.CurrentEndDate}} ({{.CurrentStartTime}} - {{.CurrentEndTime}})</p>
 			<form action="/update-booking" method="POST">
 				<input type="hidden" name="reservationID" value="{{.ReservationID}}">
@@ -76,6 +79,7 @@ func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 
 	err = tmpl.Execute(w, map[string]interface{}{
 		"ReservationID":    reservationID,
+		"UserID":           userID,
 		"CurrentVehicleID": currentVehicleID,
 		"CurrentStartDate": currentStartDate,
 		"CurrentEndDate":   currentEndDate,
@@ -110,8 +114,8 @@ func modifyBooking(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Redirect to billing or confirmation page
-		//http.Redirect(w, r, "/billing", http.StatusSeeOther)
+		// Redirect to confirmation page or back to slots
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
