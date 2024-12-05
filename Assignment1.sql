@@ -3,11 +3,14 @@ CREATE DATABASE CarSharing;
 -- DROP DATABASE carsharing;
 USE CarSharing;
 
+
 -- Create membership table
 CREATE TABLE membership (
     membershipID VARCHAR(10) PRIMARY KEY NOT NULL,
     typeOfStatus VARCHAR(10) NOT NULL,
-    descriptions VARCHAR(255) NOT NULL
+    memberDescriptions VARCHAR(255) NOT NULL,
+    discount DECIMAL(5, 2) NOT NULL,
+    discountDescription VARCHAR(255) NOT NULL
 );
 
 
@@ -101,10 +104,10 @@ CREATE TABLE billing (
 
 
 -- Insert data into membership table
-INSERT INTO membership (membershipID, typeOfStatus, descriptions) VALUES
-('M1', 'Basic', 'Basic Membership with limited access'),
-('M2', 'Premium', 'Premium Membership with added benefits'),
-('M3', 'VIP', 'VIP Membership with all benefits including priority access');
+INSERT INTO membership (membershipID, typeOfStatus, memberdescriptions,discount,discountDescription) VALUES
+('M1', 'Basic', 'Basic Membership with limited access',10,'$10 Disoount for all ride'),
+('M2', 'Premium', 'Premium Membership with added benefits',20,'$20 Disoount for all ride'),
+('M3', 'VIP', 'VIP Membership with all benefits including priority access',30,'$30 Disoount for all ride');
 
 -- Insert data into users table (userID will auto-increment)
 INSERT INTO users (username, email, password, membershipID) VALUES
@@ -173,10 +176,11 @@ INSERT INTO billing (billingId, reservationID, amount, status, promotionID) VALU
 -- Query data to check insertions
 SELECT * FROM billing;
 SELECT * FROM reservation;
+SELECT * FROM users;
 SELECT * FROM membership;
 SELECT * FROM trackRentalHistory;
 select * from vehicle_schedule;
-SELECT * FROM users;
+
 SELECT * FROM vehicle;
 SELECT * FROM vehicleStatus;
 SELECT * FROM promotion;
