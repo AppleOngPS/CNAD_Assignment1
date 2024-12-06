@@ -45,7 +45,7 @@ CREATE TABLE users (
     userID INT AUTO_INCREMENT PRIMARY KEY,  -- userID now auto-increments
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(8) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     membershipID VARCHAR(10) NOT NULL,  
     FOREIGN KEY (membershipID) REFERENCES membership(membershipID)
 );
@@ -112,7 +112,7 @@ INSERT INTO membership (membershipID, typeOfStatus, memberdescriptions,discount,
 -- Insert data into users table (userID will auto-increment)
 INSERT INTO users (username, email, password, membershipID) VALUES
 ('John', 'john@gmail.com', '12345v6', 'M1'),
-('Mary', 'mary@gmail.com', '123g56', 'M2'),
+('Alan', 'Alan@gmail.com', '123g56', 'M2'),
 ('Mary', 'mary@gmail.com', 'e3456', 'M3'),
 ('Wong', 'wongSY@gmail.com', '1234v26', 'M2');
 
@@ -180,7 +180,6 @@ SELECT * FROM users;
 SELECT * FROM membership;
 SELECT * FROM trackRentalHistory;
 select * from vehicle_schedule;
-
 SELECT * FROM vehicle;
 SELECT * FROM vehicleStatus;
 SELECT * FROM promotion;
