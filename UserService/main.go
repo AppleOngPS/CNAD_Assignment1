@@ -205,7 +205,7 @@ func main() {
 	http.HandleFunc("/profile", profilePage)
 	http.HandleFunc("/profile/update", updateProfile)
 	http.HandleFunc("/profile/delete", deleteProfile)
-
+	http.HandleFunc("/verify", verifyEmail)
 	// Car listing page
 	//http.HandleFunc("/car-listing", func(w http.ResponseWriter, r *http.Request) {
 	//CarListingHandler(w, r, db) // Call to carListing.go handler function
