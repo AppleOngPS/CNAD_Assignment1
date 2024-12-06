@@ -164,25 +164,15 @@ var db *sql.DB
 
 // User struct to hold user data (Exported to be accessible in other files)
 type User struct {
-	UserID       string
-	Username     string
-	Email        string
-	Password     string
-	MembershipID string
+	UserID                string
+	Username              string
+	Email                 string
+	Password              string
+	MembershipID          string
+	MembershipStatus      string
+	MembershipDescription string
+	MembershipDiscount    string
 }
-
-// type Car struct {
-// 	VehicleID    string
-// 	VehicleBrand string
-// 	StartDate    string
-// 	EndDate      string
-// 	StartTime    string
-// 	EndTime      string
-// 	Amount       float64
-// 	Location     string
-// 	ChargeLevel  string
-// 	Cleanliness  string
-// }
 
 // Initialize the database connection
 func initDB() {
