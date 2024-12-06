@@ -184,3 +184,4 @@ select * from vehicle_schedule;
 SELECT * FROM vehicle;
 SELECT * FROM vehicleStatus;
 SELECT * FROM promotion;
+
