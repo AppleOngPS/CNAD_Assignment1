@@ -201,7 +201,7 @@ func verifyEmail(w http.ResponseWriter, r *http.Request) {
 	var userID int
 	var isVerified bool
 	err := db.QueryRow(`
-		SELECT id, is_verified
+		SELECT userid, is_verified
 		FROM users
 		WHERE verification_token = ?`, token).Scan(&userID, &isVerified)
 
@@ -223,7 +223,7 @@ func verifyEmail(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec(`
 		UPDATE users
 		SET is_verified = TRUE
-		WHERE id = ?`, userID)
+		WHERE userid = ?`, userID)
 	if err != nil {
 		http.Error(w, "Failed to update verification status: "+err.Error(), http.StatusInternalServerError)
 		return
