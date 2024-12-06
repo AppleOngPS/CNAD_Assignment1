@@ -47,6 +47,8 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     membershipID VARCHAR(10) NOT NULL,  
+    verificationToken VARCHAR(255), 
+    isVerified BOOLEAN DEFAULT FALSE, -- Default is not verified
     FOREIGN KEY (membershipID) REFERENCES membership(membershipID)
 );
 
@@ -110,11 +112,11 @@ INSERT INTO membership (membershipID, typeOfStatus, memberdescriptions,discount,
 ('M3', 'VIP', 'VIP Membership with all benefits including priority access',30,'$30 Disoount for all ride');
 
 -- Insert data into users table (userID will auto-increment)
-INSERT INTO users (username, email, password, membershipID) VALUES
-('John', 'john@gmail.com', '12345v6', 'M1'),
-('Alan', 'Alan@gmail.com', '123g56', 'M2'),
-('Mary', 'mary@gmail.com', 'e3456', 'M3'),
-('Wong', 'wongSY@gmail.com', '1234v26', 'M2');
+INSERT INTO users (username, email, password, membershipID,verificationToken, isVerified) VALUES
+('John', 'john@gmail.com', '12345v6', 'M1',NULL, FALSE),
+('Alan', 'Alan@gmail.com', '123g56', 'M2',NULL, FALSE),
+('Mary', 'mary@gmail.com', 'e3456', 'M3',NULL, FALSE),
+('Wong', 'wongSY@gmail.com', '1234v26', 'M2',NULL, FALSE);
 
 -- Insert data into vehicle table
 INSERT INTO vehicle (vehicleID, vehicleBrand, amount) VALUES
