@@ -47,8 +47,8 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     membershipID VARCHAR(10) NOT NULL,  
-    verificationToken VARCHAR(255), 
-    isVerified BOOLEAN DEFAULT FALSE, -- Default is not verified
+    verification_Token VARCHAR(255), 
+    is_verified  BOOLEAN DEFAULT FALSE, -- Default is not verified
     FOREIGN KEY (membershipID) REFERENCES membership(membershipID)
 );
 
@@ -112,7 +112,7 @@ INSERT INTO membership (membershipID, typeOfStatus, memberdescriptions,discount,
 ('M3', 'VIP', 'VIP Membership with all benefits including priority access',30,'$30 Disoount for all ride');
 
 -- Insert data into users table (userID will auto-increment)
-INSERT INTO users (username, email, password, membershipID,verificationToken, isVerified) VALUES
+INSERT INTO users (username, email, password, membershipID,verification_Token, is_verified ) VALUES
 ('John', 'john@gmail.com', '12345v6', 'M1',NULL, FALSE),
 ('Alan', 'Alan@gmail.com', '123g56', 'M2',NULL, FALSE),
 ('Mary', 'mary@gmail.com', 'e3456', 'M3',NULL, FALSE),
