@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 )
 
@@ -28,7 +29,7 @@ func signupPage(w http.ResponseWriter, r *http.Request) {
 				<input type="password" id="password" name="password" required><br><br>
 
 				<!-- Default "Basic" membership selection -->
-				<input type="hidden" name="membershipID" value="1"><br><br>
+				<input type="hidden" name="membershipID" value="M1"><br><br>
 
 				<input type="submit" value="Sign Up">
 			</form>
@@ -48,17 +49,21 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 		membershipID := r.FormValue("membershipID")
 
-		// Fetch the membership description for the selected membershipID (Basic is always ID=1)
+		// Fetch the membership description for the selected membershipID
 		var membershipDescription string
-		err := db.QueryRow("SELECT descriptions FROM membership WHERE membershipID = ?", membershipID).Scan(&membershipDescription)
-		if err != nil {
+		err := db.QueryRow("SELECT memberDescriptions FROM membership WHERE membershipID = ?", membershipID).Scan(&membershipDescription)
+		if err == sql.ErrNoRows {
+			http.Error(w, "Invalid membership ID", http.StatusBadRequest)
+			return
+		} else if err != nil {
 			http.Error(w, "Failed to retrieve membership description: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
+		// Insert the user into the database
 		_, err = db.Exec(`
-	INSERT INTO users (username, email, password, typeOfStatus) 
-	VALUES (?, ?, ?, (SELECT typeOfStatus FROM membership WHERE membershipID = ?))`,
+			INSERT INTO users (username, email, password, membershipID) 
+			VALUES (?, ?, ?, ?)`,
 			username, email, password, membershipID,
 		)
 
