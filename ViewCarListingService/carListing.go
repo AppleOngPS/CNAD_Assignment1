@@ -11,16 +11,18 @@ import (
 func CarListingHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	// Query to get all car listings from the vehicle table
 	rows, err := db.Query(`
-		SELECT 
-			vehicleID,
-			vehicleBrand,
-			startDate,
-			endDate,
-			startTime,
-			endTime,
-			amount
-		FROM vehicle
-	`)
+    SELECT 
+        v.vehicleID,
+        v.vehicleBrand,
+        vs.AvailableSlotstartDate,
+        vs.AvailableSlotendDate,
+        vs.AvailableSlotstartTime,
+        vs.AvailableSlotendTime,
+        v.amount
+    FROM vehicle v
+    INNER JOIN vehicle_schedule vs ON v.vehicleID = vs.vehicleID
+`)
+
 	if err != nil {
 		log.Printf("Error querying database: %v", err)
 		http.Error(w, "Error retrieving car listings", http.StatusInternalServerError)
@@ -76,9 +78,9 @@ func CarListingHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				<p><strong>Available Time:</strong> %s - %s</p>
 				<p><strong>Price per Hour:</strong> $%.2f</p>
 				<!-- General Reserve Button -->
-				<form action="/reservation" method="GET">
+				 <form action="http://localhost:8082/" method="GET">
 					<input type="submit" value="Reserve">
-				</form>
+				 </form>
 			</div>`, car.VehicleBrand, car.VehicleID, car.StartDate, car.EndDate, car.StartTime, car.EndTime, car.Amount)
 	}
 
