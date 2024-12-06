@@ -867,7 +867,7 @@ Discounted Price: $%.2f
 
 You can view and download your invoice here: %s
 
-Thank you for choosing us!
+
 `, userName, currentVehicleID, currentStartDate, currentEndDate, currentStartTime, currentEndTime, totalPrice, discountedPrice, invoiceURL)
 
 	// Set up the message
@@ -978,6 +978,7 @@ func confirmReservation(w http.ResponseWriter, r *http.Request) {
 }
 
 // Display Current Booking
+// Display Current Booking
 func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
 	// Get reservation ID from the query parameters
 	reservationID := r.URL.Query().Get("reservationID")
@@ -998,7 +999,54 @@ func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Use templates to render the page
+	// Fetch user details (username and membership) using a JOIN query between users and membership tables
+	var userName, membershipID, typeOfMembership, userEmail string
+	err = db.QueryRow(`
+		SELECT u.username, u.membershipID, m.typeOfStatus, u.email
+		FROM users u
+		INNER JOIN membership m ON u.membershipID = m.membershipID
+		WHERE u.userID = ?`, userID).
+		Scan(&userName, &membershipID, &typeOfMembership, &userEmail)
+	if err != nil {
+		http.Error(w, "Unable to fetch user data", http.StatusInternalServerError)
+		return
+	}
+
+	// Calculate duration for the current booking
+	duration, err := calculateSlotDuration(currentStartDate, currentStartTime, currentEndDate, currentEndTime)
+	if err != nil {
+		http.Error(w, "Unable to calculate duration", http.StatusInternalServerError)
+		return
+	}
+
+	// Determine the discount based on membership type (fetch from the database)
+	discount, err := getMembershipDiscount(membershipID)
+	if err != nil {
+		http.Error(w, "Unable to fetch discount", http.StatusInternalServerError)
+		return
+	}
+
+	// Fetch the price per hour for the vehicle from the database
+	pricePerHour, err := getVehiclePricePerHour(currentVehicleID)
+	if err != nil {
+		http.Error(w, "Unable to fetch price per hour for the vehicle", http.StatusInternalServerError)
+		return
+	}
+
+	// Calculate the total price based on the rental duration in hours
+	totalHours := int(duration.Hours()) // Duration in hours
+	totalPrice := pricePerHour * float64(totalHours)
+
+	// Apply the discount to the total price
+	discountedPrice := totalPrice - discount
+
+	// Fetch available promo codes
+	promoCodes, err := getPromoCodes()
+	if err != nil {
+		http.Error(w, "Unable to fetch promo codes", http.StatusInternalServerError)
+		return
+	}
+
 	// Render the HTML template and pass in the data
 	tmpl := template.Must(template.New("modify").Parse(`
 		<!DOCTYPE html>
@@ -1033,7 +1081,6 @@ func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
     <button type="submit">Go to Invoice</button>
 </form>
 
-</button>
 			<script>
 				function applyPromoCode() {
 					const promoSelect = document.getElementById("promoCodeSelect");
@@ -1048,18 +1095,39 @@ func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
 		</html>
 	`))
 
-	// Render the template with current booking data
+	// Render the template with the necessary data
 	tmpl.Execute(w, struct {
+		UserName         string
+		MembershipID     string
+		TypeOfMembership string
 		CurrentVehicleID string
 		CurrentStartDate string
 		CurrentEndDate   string
 		CurrentStartTime string
 		CurrentEndTime   string
+		Duration         string
+		Discount         float64
+		TotalPrice       float64
+		DiscountedPrice  float64
+		PromoCodes       []struct {
+			Code     string
+			Discount float64
+		}
+		ReservationID string
 	}{
+		UserName:         userName,
+		MembershipID:     membershipID,
+		TypeOfMembership: typeOfMembership,
 		CurrentVehicleID: currentVehicleID,
 		CurrentStartDate: currentStartDate,
 		CurrentEndDate:   currentEndDate,
 		CurrentStartTime: currentStartTime,
 		CurrentEndTime:   currentEndTime,
+		Duration:         fmt.Sprintf("%.2f hours", duration.Hours()),
+		Discount:         discount,
+		TotalPrice:       totalPrice,
+		DiscountedPrice:  discountedPrice,
+		PromoCodes:       promoCodes,
+		ReservationID:    reservationID,
 	})
 }
