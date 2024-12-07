@@ -53,7 +53,9 @@ All microservices link to a single database to avoid data duplication and ensure
 
 # Architecture diagram
 <br /> 
-![architecture diagram](https://github.com/user-attachments/assets/98b4b58c-d941-4f45-8c61-1e7421f6108a)<br /> 
+![image](https://github.com/user-attachments/assets/b8a50e57-dd62-4da9-985b-69990837b503)
+
+<br /> 
 
 # Instructions for setting up and running your microservices<br /> <br /> 
 <br /> 
