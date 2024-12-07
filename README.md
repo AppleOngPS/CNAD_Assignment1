@@ -1,7 +1,7 @@
 # CNAD_Assignment1
 
 
-# Design consideration of your microservices
+# Design consideration of your microservices<br /> <br /> 
 
 **Service Decomposition:**<br /> 
 
@@ -52,54 +52,54 @@ Verification email sent when complete the payment and will sent the invoice link
 All microservices link to a single database to avoid data duplication and ensure data consistency. However, denormalization may be used in some cases to improve query performance, depending on the service's needs.
 
 # Architecture diagram
+<br /> 
+![architecture diagram](https://github.com/user-attachments/assets/cf4189b9-bc90-41b2-9a2f-860d8ac18e3f)<br /> 
 
-![architecture diagram](https://github.com/user-attachments/assets/cf4189b9-bc90-41b2-9a2f-860d8ac18e3f)
-
-# Instructions for setting up and running your microservices
-
-1. Open 4 different terminal and run the service (follow below screenshot)
+# Instructions for setting up and running your microservices<br /> <br /> 
+<br /> 
+1. Open 4 different terminal and run the service (follow below screenshot)<br /> <br /> 
    
-For UserService
-![UserService_Terminal_ScreenShot](https://github.com/user-attachments/assets/a2012b8b-a2c2-442c-a059-8097cceedd6f)
+For UserService<br /> 
+![UserService_Terminal_ScreenShot](https://github.com/user-attachments/assets/a2012b8b-a2c2-442c-a059-8097cceedd6f)<br /> 
 
-For ViewCarListing
-![Carlisting_Terminal_Screenshot](https://github.com/user-attachments/assets/e07710c0-8db0-40e3-b2c5-5101ce6c4bff)
+For ViewCarListing<br /> 
+![Carlisting_Terminal_Screenshot](https://github.com/user-attachments/assets/e07710c0-8db0-40e3-b2c5-5101ce6c4bff)<br /> 
 
-For ReservationService
-![ReservationService_Terminal_Screenshot](https://github.com/user-attachments/assets/2b62baec-d696-4b25-a567-b881b17cf716)
+For ReservationService<br /> 
+![ReservationService_Terminal_Screenshot](https://github.com/user-attachments/assets/2b62baec-d696-4b25-a567-b881b17cf716)<br /> 
 
 For CheckoutService
 ![CheckoutService_Terminal_Screenshot](https://github.com/user-attachments/assets/d52639d7-aa0c-456a-a75c-87fb5881b209)
 
-2. To access the page for each service (refer to the routing in each main file)
+2. To access the page for each service (refer to the routing in each main file)<br /> <br /> 
 
-To go to signup page: 
-![image](https://github.com/user-attachments/assets/a2e53696-d5bd-4c5e-b24c-49504669ea4c)
+To go to signup page: <br /> 
+![image](https://github.com/user-attachments/assets/a2e53696-d5bd-4c5e-b24c-49504669ea4c)<br /> 
 
-To go to login page:
-![image](https://github.com/user-attachments/assets/c68360cc-f072-4159-852f-83e2a776fba1)
+To go to login page:<br /> 
+![image](https://github.com/user-attachments/assets/c68360cc-f072-4159-852f-83e2a776fba1)<br /> 
 
-To go to profile page
-![image](https://github.com/user-attachments/assets/77110b2c-11ee-4d63-8f9b-c68c372acdf8)
+To go to profile page<br /> 
+![image](https://github.com/user-attachments/assets/77110b2c-11ee-4d63-8f9b-c68c372acdf8)<br /> 
 
 
-To go to car listing page
-![image](https://github.com/user-attachments/assets/c7cefcff-20e9-4e60-9203-39e2c4d07539)
+To go to car listing page<br /> 
+![image](https://github.com/user-attachments/assets/c7cefcff-20e9-4e60-9203-39e2c4d07539)<br /> 
 
-To go to reserve slot 
-![image](https://github.com/user-attachments/assets/0ea33f75-18f7-49ec-a8c2-56b9272083b9)
+To go to reserve slot <br /> 
+![image](https://github.com/user-attachments/assets/0ea33f75-18f7-49ec-a8c2-56b9272083b9)<br /> 
 
-To modify booking
-![image](https://github.com/user-attachments/assets/f247b0ca-138d-4d18-b8b2-5fc6131700d4)
+To modify booking<br /> 
+![image](https://github.com/user-attachments/assets/f247b0ca-138d-4d18-b8b2-5fc6131700d4)<br /> 
 
-To display current booking to pay
-![image](https://github.com/user-attachments/assets/6b546679-a28d-446b-ab49-db4eb8098e91)
+To display current booking to pay<br /> 
+![image](https://github.com/user-attachments/assets/6b546679-a28d-446b-ab49-db4eb8098e91)<br /> 
 
-To send email confirmation 
-![image](https://github.com/user-attachments/assets/3b3ea8de-9529-46b0-bfe3-f2c9416c642d)
+To send email confirmation <br /> 
+![image](https://github.com/user-attachments/assets/3b3ea8de-9529-46b0-bfe3-f2c9416c642d)<br /> 
 
-Generate Invoice
-![image](https://github.com/user-attachments/assets/5acd6add-8546-4c22-92f8-1bd369d45a3f)
+Generate Invoice<br /> 
+![image](https://github.com/user-attachments/assets/5acd6add-8546-4c22-92f8-1bd369d45a3f)<br /> 
 
 
 
