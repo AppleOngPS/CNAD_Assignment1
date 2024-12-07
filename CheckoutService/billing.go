@@ -848,7 +848,7 @@ func sendEmail(userEmail, userName, currentVehicleID, currentStartDate, currentE
 	smtpPort := "587"
 
 	// Construct the URL for the invoice page
-	invoiceURL := fmt.Sprintf("http://localhost:8083/confirmReservation?reservationID=%s", reservationID)
+	invoiceURL := fmt.Sprintf("http://localhost:8083/generateInvoice?reservationID=%s", reservationID)
 
 	// Compose the email content
 	subject := "Your Vehicle Reservation Details"
@@ -1076,7 +1076,7 @@ func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
 				{{end}}
 			</select>
 			<p><strong>Final Price after Promo Code:</strong> $<span id="finalPrice">{{.DiscountedPrice}}</span></p>
-			<form action="/invoice" method="get">
+			<form action="/confirmReservation" method="get">
     <input type="hidden" name="reservationID" value="{{.ReservationID}}">
     <button type="submit">Go to Invoice</button>
 </form>
@@ -1130,4 +1130,143 @@ func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
 		PromoCodes:       promoCodes,
 		ReservationID:    reservationID,
 	})
+}
+
+// Function to display the invoice dynamically based on reservationID
+func displaydetails(w http.ResponseWriter, r *http.Request) {
+	// Get reservationID from query params
+	reservationID := r.URL.Query().Get("reservationID")
+	if reservationID == "" {
+		http.Error(w, "Missing reservation ID", http.StatusBadRequest)
+		return
+	}
+
+	// Fetch current booking details from the reservation table based on reservationID
+	var userID, currentVehicleID, currentStartDate, currentEndDate, currentStartTime, currentEndTime string
+	err := db.QueryRow(`
+		SELECT userID, vehicleID, startDate, endDate, startTime, endTime
+		FROM reservation
+		WHERE reservationID = ?`, reservationID).
+		Scan(&userID, &currentVehicleID, &currentStartDate, &currentEndDate, &currentStartTime, &currentEndTime)
+	if err != nil {
+		http.Error(w, "Unable to fetch reservation data", http.StatusInternalServerError)
+		return
+	}
+
+	// Fetch user details (userName, membershipID, and membershipType) using a JOIN query
+	var userName, membershipID, typeOfMembership string
+	err = db.QueryRow(`
+		SELECT u.username, u.membershipID, m.typeOfStatus
+		FROM users u
+		INNER JOIN membership m ON u.membershipID = m.membershipID
+		WHERE u.userID = ?`, userID).
+		Scan(&userName, &membershipID, &typeOfMembership)
+	if err != nil {
+		http.Error(w, "Unable to fetch user data", http.StatusInternalServerError)
+		return
+	}
+
+	// Calculate the rental duration
+	duration, err := calculateSlotDuration(currentStartDate, currentStartTime, currentEndDate, currentEndTime)
+	if err != nil {
+		http.Error(w, "Unable to calculate duration", http.StatusInternalServerError)
+		return
+	}
+
+	// Fetch the price per hour of the vehicle
+	pricePerHour, err := getVehiclePricePerHour(currentVehicleID)
+	if err != nil {
+		http.Error(w, "Unable to fetch price per hour for the vehicle", http.StatusInternalServerError)
+		return
+	}
+
+	// Calculate the total price based on the rental duration in hours
+	totalHours := int(duration.Hours()) // Duration in hours
+	totalPrice := pricePerHour * float64(totalHours)
+
+	// Determine the discount based on membership type
+	discount, err := getMembershipDiscount(membershipID)
+	if err != nil {
+		http.Error(w, "Unable to fetch membership discount", http.StatusInternalServerError)
+		return
+	}
+
+	// Apply membership discount
+	priceAfterMembershipDiscount := totalPrice - discount
+
+	// Fetch promo codes (if any)
+	promoCodes, err := getPromoCodes()
+	if err != nil {
+		http.Error(w, "Unable to fetch promo codes", http.StatusInternalServerError)
+		return
+	}
+
+	// Apply the first promo code if available
+	var promoCodeDiscount float64
+	if len(promoCodes) > 0 {
+		// Assuming we apply the first promo code
+		promoCodeDiscount = promoCodes[0].Discount
+	}
+
+	// Final amount to pay after both membership and promo code discounts
+	finalPrice := priceAfterMembershipDiscount - promoCodeDiscount
+
+	// Pass all the fetched data to the template
+	tmpl := `
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Invoice</title>
+		</head>
+		<body>
+			<h1>Invoice</h1>
+			<p><strong>User Name:</strong> {{.UserName}}</p>
+			<p><strong>Membership ID:</strong> {{.MembershipID}}</p>
+			<p><strong>Membership Type:</strong> {{.TypeOfMembership}}</p>
+			<p><strong>Current Booking for Vehicle:</strong> {{.CurrentVehicleID}} from {{.CurrentStartDate}} to {{.CurrentEndDate}} ({{.CurrentStartTime}} - {{.CurrentEndTime}})</p>
+			<p><strong>Rental Duration:</strong> {{.Duration}}</p>
+			<p><strong>Total Price (before any discount):</strong> ${{.TotalPrice}}</p>
+			<p><strong>Discount from Membership:</strong> ${{.Discount}}</p>
+			<p><strong>Promotion Discount:</strong> ${{.PromoCodeDiscount}}</p>
+			<p><strong>Total Amount (after all discounts):</strong> ${{.FinalPrice}}</p>
+
+			<!-- No dropdown for promo code anymore, just final price -->
+			<p><strong>Final Price:</strong> ${{.FinalPrice}}</p>
+
+			
+		</body>
+		</html>
+	`
+
+	// Parse and execute the template
+	tmplParsed, err := template.New("invoice").Parse(tmpl)
+	if err != nil {
+		http.Error(w, "Error parsing template", http.StatusInternalServerError)
+		return
+	}
+
+	// Pass data to the template
+	err = tmplParsed.Execute(w, map[string]interface{}{
+		"UserName":                     userName,
+		"MembershipID":                 membershipID,
+		"TypeOfMembership":             typeOfMembership,
+		"CurrentVehicleID":             currentVehicleID,
+		"CurrentStartDate":             currentStartDate,
+		"CurrentEndDate":               currentEndDate,
+		"CurrentStartTime":             currentStartTime,
+		"CurrentEndTime":               currentEndTime,
+		"Duration":                     duration,
+		"Discount":                     discount,
+		"TotalPrice":                   totalPrice,
+		"PriceAfterMembershipDiscount": priceAfterMembershipDiscount,
+		"PromoCodeDiscount":            promoCodeDiscount,
+		"FinalPrice":                   finalPrice,
+		"ReservationID":                reservationID,
+	})
+
+	if err != nil {
+		http.Error(w, "Error executing template", http.StatusInternalServerError)
+	}
 }

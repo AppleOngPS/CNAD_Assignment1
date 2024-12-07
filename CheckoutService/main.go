@@ -30,11 +30,12 @@ func main() {
 	// Initialize the database
 	initDB()
 	defer db.Close()
-	// to run this page put url like like this http://localhost:8083/displayCurrentbooking?reservationID=10 in browser reservationid can be changed
+	// to run this page put url like like this http://localhost:8083/currentBooking?reservationID=1 in browser reservationid can be changed
 
 	// Set up routes
 	http.HandleFunc("/confirmReservation", confirmReservation)
-	http.HandleFunc("/currentBooking", displayCurrentBooking)
+	http.HandleFunc("/displayCurrentBooking", displayCurrentBooking)
+	http.HandleFunc("/generateInvoice", displaydetails)
 
 	// Start the server
 	log.Println("Server is running on port 8083...")
