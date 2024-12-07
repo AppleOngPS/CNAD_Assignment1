@@ -848,7 +848,7 @@ func sendEmail(userEmail, userName, currentVehicleID, currentStartDate, currentE
 	smtpPort := "587"
 
 	// Construct the URL for the invoice page
-	invoiceURL := fmt.Sprintf("http://localhost:8083/invoice?reservationID=%s", reservationID)
+	invoiceURL := fmt.Sprintf("http://localhost:8083/confirmReservation?reservationID=%s", reservationID)
 
 	// Compose the email content
 	subject := "Your Vehicle Reservation Details"
