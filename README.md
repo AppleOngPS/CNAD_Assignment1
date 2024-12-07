@@ -99,7 +99,7 @@ To send email confirmation <br />
 ![image](https://github.com/user-attachments/assets/3b3ea8de-9529-46b0-bfe3-f2c9416c642d)<br /> 
 
 Generate Invoice<br /> 
-![image](https://github.com/user-attachments/assets/5acd6add-8546-4c22-92f8-1bd369d45a3f)<br /> 
+![image](https://github.com/user-attachments/assets/b2875c96-60dd-42e5-86f7-832d136bd1c4)<br /> 
 
 
 
