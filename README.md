@@ -44,7 +44,9 @@ SQL: Insert a new record
 User HTTP/REST for synchronous call (eg from car listing to reservation)<br /> 
 
 **Security**<br /> 
-Secure all sensetive data such as user password using JWT Token<br /> 
+Secure all sensetive data such as user password using bcrypt<br /> 
+Verification email sent when signing up a new account <br /> 
+Verification email sent when complete the payment and will sent the invoice link <br /> 
 
 **Database**
 All microservices link to a single database to avoid data duplication and ensure data consistency. However, denormalization may be used in some cases to improve query performance, depending on the service's needs.
@@ -54,6 +56,24 @@ All microservices link to a single database to avoid data duplication and ensure
 ![architecture diagram](https://github.com/user-attachments/assets/cf4189b9-bc90-41b2-9a2f-860d8ac18e3f)
 
 # Instructions for setting up and running your microservices
+
+1. Open 4 different terminal and run the service (follow below screenshot) 
+For UserService
+
+
+For ViewCarListing
+
+
+For ReservationService
+
+
+For CheckoutService
+
+2. To access the page for each service (refer to the routing in each main file)
+
+
+
+
 
 
 
