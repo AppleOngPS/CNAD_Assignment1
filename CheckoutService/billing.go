@@ -252,7 +252,6 @@ func confirmReservation(w http.ResponseWriter, r *http.Request) {
 }
 
 // Display Current Booking
-// Display Current Booking
 func displayCurrentBooking(w http.ResponseWriter, r *http.Request) {
 	// Get reservation ID from the query parameters
 	reservationID := r.URL.Query().Get("reservationID")
