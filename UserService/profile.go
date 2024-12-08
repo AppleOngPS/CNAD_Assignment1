@@ -68,6 +68,7 @@ func profilePage(w http.ResponseWriter, r *http.Request) {
 		</head>
 		<body>
 			<h2>Your Profile</h2>
+			<p><strong>UserID:</strong> %s</p>
 			<p><strong>Username:</strong> %s</p>
 			<p><strong>Email:</strong> %s</p>
 			<p><strong>Membership ID:</strong> %s</p>
@@ -114,7 +115,7 @@ func profilePage(w http.ResponseWriter, r *http.Request) {
 				 </form>
 		</body>
 		</html>
-	`, user.Username, user.Email, user.MembershipID, user.MembershipStatus, user.MembershipDescription, user.MembershipDiscount, user.UserID, user.Username, user.Email, rentalHistory, user.UserID)
+	`, user.UserID, user.Username, user.Email, user.MembershipID, user.MembershipStatus, user.MembershipDescription, user.MembershipDiscount, user.UserID, user.Username, user.Email, rentalHistory, user.UserID)
 
 	// Serve the HTML to the user
 	w.Write([]byte(tmpl))
