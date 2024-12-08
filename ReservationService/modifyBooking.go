@@ -52,42 +52,42 @@ func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 
 	// Render modify booking page
 	tmpl := template.Must(template.New("modify").Parse(`
-		<!DOCTYPE html>
-		<html lang="en">
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>Modify Current Booking</title>
-		</head>
-		<body>
-			<h1>Modify Your Booking</h1>
-			<p>User ID: {{.UserID}}</p>
-			<p>Current Booking for Vehicle: {{.CurrentVehicleID}} from {{.CurrentStartDate}} to {{.CurrentEndDate}} ({{.CurrentStartTime}} - {{.CurrentEndTime}})</p>
-			
-			<!-- Update Booking drop down list -->
-			<form action="/update-booking" method="POST">
-				<input type="hidden" name="reservationID" value="{{.ReservationID}}">
-				<label for="vehicleID">Select New Vehicle Slot:</label>
-				<select name="vehicleID" id="vehicleID">
-					{{range .Slots}}
-						<option value="{{.VehicleID}}">{{.VehicleID}} - {{.AvailableSlotStartDate}} to {{.AvailableSlotEndDate}} ({{.AvailableSlotStartTime}} - {{.AvailableSlotEndTime}})</option>
-					{{end}}
-				</select><br><br>
-				<input type="submit" value="Update Booking">
-			</form>
-			
-			<!-- Delete Booking Form -->
-			<form action="/delete-booking" method="POST" style="margin-top: 20px;">
-				<input type="hidden" name="reservationID" value="{{.ReservationID}}">
-				<button type="submit" >Delete Booking</button>
-			</form>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Modify Current Booking</title>
+    </head>
+    <body>
+        <h1>Modify Your Booking</h1>
+        <p>User ID: {{.UserID}}</p>
+        <p>Current Booking for Vehicle: {{.CurrentVehicleID}} from {{.CurrentStartDate}} to {{.CurrentEndDate}} ({{.CurrentStartTime}} - {{.CurrentEndTime}})</p>
+        
+        <!-- Update Booking drop down list -->
+        <form action="/update-booking" method="POST">
+            <input type="hidden" name="reservationID" value="{{.ReservationID}}">
+            <label for="vehicleID">Select New Vehicle Slot:</label>
+            <select name="vehicleID" id="vehicleID">
+                {{range .Slots}}
+                    <option value="{{.VehicleID}}">{{.VehicleID}} - {{.AvailableSlotStartDate}} to {{.AvailableSlotEndDate}} ({{.AvailableSlotStartTime}} - {{.AvailableSlotEndTime}})</option>
+                {{end}}
+            </select><br><br>
+            <input type="submit" value="Update Booking">
+        </form>
+        
+        <!-- Delete Booking Form -->
+        <form action="/delete-booking" method="POST" style="margin-top: 20px;">
+            <input type="hidden" name="reservationID" value="{{.ReservationID}}">
+            <button type="submit">Delete Booking</button>
+        </form>
 
-				<form action="http://localhost:8083/displayCurrentBooking" method="GET">
-					<input type="submit" value="Check Out"
-				 </form>
-		</body>
-		</html>
-	`))
+        <form action="http://localhost:8083/displayCurrentBooking" method="GET">
+            <input type="submit" value="Check Out">
+        </form>
+    </body>
+    </html>
+`))
 
 	err = tmpl.Execute(w, map[string]interface{}{
 		"ReservationID":    reservationID,
