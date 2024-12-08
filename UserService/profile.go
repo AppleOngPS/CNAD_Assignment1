@@ -107,6 +107,11 @@ func profilePage(w http.ResponseWriter, r *http.Request) {
 				<input type="hidden" name="userID" value="%s">
 				<input type="submit" value="Delete Account" onclick="return confirm('Are you sure you want to delete your account?');">
 			</form>
+			<br/><br/>
+
+			<form action="http://localhost:8081/car-listing" method="GET">
+					<input type="submit" value="Reserve">
+				 </form>
 		</body>
 		</html>
 	`, user.Username, user.Email, user.MembershipID, user.MembershipStatus, user.MembershipDescription, user.MembershipDiscount, user.UserID, user.Username, user.Email, rentalHistory, user.UserID)
