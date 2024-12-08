@@ -46,7 +46,7 @@ User HTTP/REST for synchronous call (eg from car listing to reservation)<br />
 **Security**<br /> 
 Secure all sensetive data such as user password using bcrypt<br /> 
 Verification email sent when signing up a new account <br /> 
-Verification email sent when complete the payment and will sent the invoice link <br /> 
+Verification email sent when reservation is completed and will sent the invoice link <br /> 
 
 **Database**
 All microservices link to a single database to avoid data duplication and ensure data consistency. However, denormalization may be used in some cases to improve query performance, depending on the service's needs.
