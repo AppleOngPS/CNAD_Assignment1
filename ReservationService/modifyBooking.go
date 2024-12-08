@@ -81,6 +81,10 @@ func showModifyBooking(w http.ResponseWriter, r *http.Request) {
 				<input type="hidden" name="reservationID" value="{{.ReservationID}}">
 				<button type="submit" >Delete Booking</button>
 			</form>
+
+				<form action="http://localhost:8083/displayCurrentBooking" method="GET">
+					<input type="submit" value="Check Out"
+				 </form>
 		</body>
 		</html>
 	`))
