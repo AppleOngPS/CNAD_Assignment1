@@ -110,7 +110,7 @@ func profilePage(w http.ResponseWriter, r *http.Request) {
 			<br/><br/>
 
 			<form action="http://localhost:8081/car-listing" method="GET">
-					<input type="submit" value="Reserve">
+					<input type="submit" value="View Car Listing">
 				 </form>
 		</body>
 		</html>
