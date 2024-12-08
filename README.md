@@ -84,7 +84,7 @@ To go to login page:<br />
 ![image](https://github.com/user-attachments/assets/c68360cc-f072-4159-852f-83e2a776fba1)<br /> 
 
 To go to profile page<br /> 
-![image](https://github.com/user-attachments/assets/77110b2c-11ee-4d63-8f9b-c68c372acdf8)<br /> 
+![image](https://github.com/user-attachments/assets/3cff12e4-b29f-4515-ad37-fd580db2be0c)<br /> 
 
 
 To go to car listing page<br /> 
